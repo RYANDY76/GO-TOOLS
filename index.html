@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GO TOOLS - Toko Peralatan Hardware Online</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Tambahan style untuk produk */
+        .discount-label {
+            background-color: #ff6b6b;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+        
+        .product-location {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 5px;
+        }
+        
+        .product-location i {
+            margin-right: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .product-badges {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        .product-badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        
+        .badge-discount {
+            background-color: #ffe8e8;
+            border-color: #ffcece;
+            color: #e74c3c;
+        }
+        
+        .badge-gift {
+            background-color: #e8f7ff;
+            border-color: #cee7f8;
+            color: #3498db;
+        }
+        
+        .badge-promo {
+            background-color: #fff8e8;
+            border-color: #f8e7ce;
+            color: #f39c12;
+        }
+        
+        .star-badge {
+            background-color: #ff9800;
+            color: white;
+            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-right: 5px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .star-badge i {
+            margin-right: 2px;
+        }
+        
+        /* Style untuk modal keranjang */
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-original {
+            text-decoration: line-through;
+            color: #999;
+            margin-left: 8px;
+            font-size: 0.9em;
+        }
+        
+        .cart-item-discount {
+            color: #e74c3c;
+            margin-left: 8px;
+            font-size: 0.9em;
+        }
+        
+        .dashboard-welcome {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .dashboard-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-tools"></i></div>
+                GO <span>TOOLS</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Beranda</a></li>
+                    <li><a href="#products"><i class="fas fa-tools"></i> Produk</a></li>
+                    <li><a href="#"><i class="fas fa-tags"></i> Promo</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> Tentang Kami</a></li>
+                    <li><a href="#"><i class="fas fa-headset"></i> Bantuan</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="user-icon" id="openLoginModal">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="cart-icon" id="openCartModal">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div class="cart-count" id="cartCount">0</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h1>Alat Berkualitas untuk Proyek Anda</h1>
+                <p>GO TOOLS menyediakan peralatan hardware berkualitas tinggi dengan harga terbaik. Lengkapi koleksi alat Anda sekarang!</p>
+                <a href="#products" class="btn btn-primary">Belanja Sekarang</a>
+            </section>
+
+            <section id="products">
+                <div class="products-heading">
+                    <h2>Produk Terbaru</h2>
+                    <div class="products-filter">
+                        <select id="sortProducts">
+                            <option value="default">Urutkan: Default</option>
+                            <option value="price-low">Harga: Rendah ke Tinggi</option>
+                            <option value="price-high">Harga: Tinggi ke Rendah</option>
+                            <option value="rating">Rating Tertinggi</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="products-grid" id="productsGrid">
+                    <!-- Product cards akan dirender di sini -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>GO TOOLS</h3>
+                    <p>Menyediakan peralatan hardware berkualitas tinggi untuk kebutuhan proyek Anda.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Kategori</h3>
+                    <a href="#">Perkakas Tangan</a>
+                    <a href="#">Perkakas Listrik</a>
+                    <a href="#">Perkakas Bengkel</a>
+                    <a href="#">Perkakas Rumah Tangga</a>
+                    <a href="#">Aksesori Perkakas</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Bantuan</h3>
+                    <a href="#">Cara Berbelanja</a>
+                    <a href="#">Pengiriman</a>
+                    <a href="#">Pembayaran</a>
+                    <a href="#">Pengembalian</a>
+                    <a href="#">FAQ</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Hubungi Kami</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Jl. Perkakas No. 123, Jakarta</p>
+                    <p><i class="fas fa-phone"></i> +62 123-4567-890</p>
+                    <p><i class="fas fa-envelope"></i> info@gotools.com</p>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 GO TOOLS. Hak Cipta Dilindungi.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Login -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeLoginModal">&times;</span>
+            <h2 class="modal-title">Masuk ke Akun Anda</h2>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="login">Masuk</div>
+                    <div class="tab" data-tab="register">Daftar</div>
+                </div>
+                
+                <!-- Login Tab -->
+                <div class="tab-content active" id="loginTab">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="Masukkan email Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan password Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label>
+                                    <input type="checkbox" id="rememberMe"> Ingat saya
+                                </label>
+                                <a href="#" style="color: var(--primary); font-size: 0.9rem;">Lupa password?</a>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary btn-form">Masuk</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Register Tab -->
+                <div class="tab-content" id="registerTab">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="registerName">Nama Lengkap</label>
+                            <input type="text" id="registerName" class="form-control" placeholder="Masukkan nama lengkap Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" class="form-control" placeholder="Masukkan email Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <input type="password" id="registerPassword" class="form-control" placeholder="Masukkan password Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Konfirmasi Password</label>
+                            <input type="password" id="confirmPassword" class="form-control" placeholder="Konfirmasi password Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="agreeTerms" required> Saya setuju dengan <a href="#" style="color: var(--primary);">syarat dan ketentuan</a>
+                            </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary btn-form">Daftar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cart -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content cart-modal">
+            <span class="close-modal" id="closeCartModal">&times;</span>
+            <h2 class="modal-title">Keranjang Belanja</h2>
+            
+            <div id="cartItems" class="cart-items">
+                <!-- Cart items akan dirender di sini -->
+            </div>
+            
+            <div id="cartEmpty" class="empty-cart" style="display: none;">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Keranjang belanja Anda masih kosong.</p>
+                <p>Mulai belanja sekarang!</p>
+                <div style="margin-top: 20px;">
+                    <a href="#products" class="btn btn-primary" id="shopNowBtn">Belanja Sekarang</a>
+                </div>
+            </div>
+            
+            <div id="cartSummary" class="cart-summary" style="display: none;">
+                <div class="cart-summary-row">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal">Rp0</span>
+                </div>
+                <div class="cart-summary-row">
+                    <span>Diskon</span>
+                    <span id="cartDiscount" class="text-danger">-Rp0</span>
+                </div>
+                <div class="cart-summary-row">
+                    <span>Ongkos Kirim</span>
+                    <span id="cartShipping">Rp0</span>
+                </div>
+                
+                <div class="voucher-input">
+                    <input type="text" placeholder="Masukkan kode voucher">
+                    <button>Terapkan</button>
+                </div>
+                
+                <div class="cart-total">
+                    <span>Total</span>
+                    <span id="cartTotal">Rp0</span>
+                </div>
+                
+                <div class="payment-methods">
+                    <h4>Metode Pembayaran</h4>
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <i class="fas fa-credit-card"></i>
+                            <div>Kartu Kredit</div>
+                        </div>
+                        <div class="payment-option">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <div>Transfer Bank</div>
+                        </div>
+                        <div class="payment-option">
+                            <i class="fas fa-wallet"></i>
+                            <div>E-Wallet</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer" style="margin-top: 20px;">
+                    <button class="btn btn-primary btn-form" id="checkoutBtn">Lanjutkan ke Pembayaran</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page (Akan ditampilkan setelah login) -->
+    <div id="dashboard" style="display: none;">
+        <div class="container" style="padding-top: 30px; padding-bottom: 30px;">
+            <div class="dashboard-welcome">
+                <h2>Selamat Datang, <span id="userNameDisplay">Pengguna</span>!</h2>
+                <p>Kelola akun dan pesanan Anda dengan mudah dari dashboard ini.</p>
+            </div>
+            
+            <div class="dashboard-section">
+                <h3><i class="fas fa-box"></i> Pesanan Terbaru</h3>
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <p>Anda belum memiliki pesanan.</p>
+                    <a href="#products" class="btn btn-primary" style="margin-top: 15px;">Mulai Belanja</a>
+                </div>
+            </div>
+            
+            <div class="dashboard-section">
+                <h3><i class="fas fa-heart"></i> Wishlist</h3>
+                <div class="empty-state">
+                    <i class="fas fa-heart"></i>
+                    <p>Wishlist Anda masih kosong.</p>
+                    <a href="#products" class="btn btn-primary" style="margin-top: 15px;">Jelajahi Produk</a>
+                </div>
+            </div>
+            
+            <div class="dashboard-section">
+                <h3><i class="fas fa-user-cog"></i> Pengaturan Akun</h3>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" class="form-control" value="Pengguna" id="dashboardName">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" value="user@example.com" id="dashboardEmail" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Alamat</label>
+                    <textarea class="form-control" rows="3" placeholder="Masukkan alamat Anda"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Telepon</label>
+                    <input type="tel" class="form-control" placeholder="Masukkan nomor telepon Anda">
+                </div>
+                <button class="btn btn-primary" style="margin-top: 15px;">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript untuk fungsionalitas login dan produk -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Base URL API
+const API_URL = 'http://localhost:3000/api';
+
+// Fungsi untuk register user
+async function registerUser(userData) {
+    try {
+        const response = await fetch(`${API_URL}/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.message || 'Registrasi gagal');
+        }
+        
+        return data.data;
+    } catch (error) {
+        console.error('Register error:', error);
+        throw error;
+    }
+}
+
+// Fungsi untuk login user
+async function loginUser(credentials) {
+    try {
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.message || 'Login gagal');
+        }
+        
+        // Simpan data user di localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userId', data.data.id);
+        localStorage.setItem('userName', data.data.name);
+        localStorage.setItem('userEmail', data.data.email);
+        
+        return data.data;
+    } catch (error) {
+        console.error('Login error:', error);
+        throw error;
+    }
+}
+
+// Fungsi untuk update profile user
+async function updateUserProfile(userId, userData) {
+    try {
+        const response = await fetch(`${API_URL}/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.message || 'Gagal update profile');
+        }
+        
+        // Update data user di localStorage
+        localStorage.setItem('userName', data.data.name);
+        
+        return data.data;
+    } catch (error) {
+        console.error('Update profile error:', error);
+        throw error;
+    }
+}
+
+// Fungsi untuk logout
+function logoutUser() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    
+    // Refresh halaman
+    location.reload();
+}
+            // DOM Elements
+            const openLoginModalBtn = document.getElementById('openLoginModal');
+            const loginModal = document.getElementById('loginModal');
+            const closeLoginModalBtn = document.getElementById('closeLoginModal');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const mainContent = document.querySelector('.main-content');
+            const dashboard = document.getElementById('dashboard');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const dashboardName = document.getElementById('dashboardName');
+            const dashboardEmail = document.getElementById('dashboardEmail');
+            const header = document.querySelector('header');
+            const footer = document.querySelector('footer');
+            const openCartModalBtn = document.getElementById('openCartModal');
+            const cartModal = document.getElementById('cartModal');
+            const closeCartModalBtn = document.getElementById('closeCartModal');
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartEmpty = document.getElementById('cartEmpty');
+            const cartSummary = document.getElementById('cartSummary');
+            const cartSubtotal = document.getElementById('cartSubtotal');
+            const cartDiscount = document.getElementById('cartDiscount');
+            const cartTotal = document.getElementById('cartTotal');
+            const productsGrid = document.getElementById('productsGrid');
+            const sortProducts = document.getElementById('sortProducts');
+            const shopNowBtn = document.getElementById('shopNowBtn');
+            
+            // Contoh kredensial statis (dalam aplikasi nyata, ini akan diambil dari database)
+            const validCredentials = {
+                'user@example.com': 'password123'
+            };
+
+            // Data produk
+            const products = [
+                {
+                    id: 1,
+                    name: "Kit Alat Bor Baterai Genggam 98V",
+                    brand: "ECOSEN",
+                    price: 185000,
+                    originalPrice: 975000,
+                    discount: "81%",
+                    rating: 4.7,
+                    location: "Tangerang",
+                    image: "Kit Alat Bor Baterai Genggam 98V.jpg",
+                    badges: {
+                        discount: "Diskon Rp4RB",
+                        gift: "Hadiah Gratis"
+                    },
+                    stock: 15,
+                    description: "Kit alat bor baterai genggam tanpa kabel dengan 85 tools perlengkapan"
+                },
+                {
+                    id: 2,
+                    name: "REAIM Multi-alat 7 dalam 1 Gergaji multifungsi",
+                    brand: "REAIM",
+                    price: 799000,
+                    originalPrice: 1598000,
+                    discount: "50%",
+                    rating: 4.7,
+                    location: "Jakarta Utara",
+                    image: "REAIM Multi-alat 7 dalam 1 Gergaji multifungsi.jpg",
+                    badges: {
+                        discount: "Diskon Rp9RB",
+                        promo: "Pilih 2, diskon 1%"
+                    },
+                    stock: 8,
+                    description: "Brushless Multipurpose 7-in-1 Tool Set dengan garansi 3 tahun"
+                },
+                {
+                    id: 3,
+                    name: "Motorspeed Kit Alat Perbaikan Otomotif Set 94 PCS",
+                    brand: "Motorspeed",
+                    price: 44500,
+                    originalPrice: 114000,
+                    discount: "61%",
+                    rating: 4.6,
+                    location: "Kab. Tangerang",
+                    image: "Motorspeed Kit Alat Perbaikan Otomotif Set 94 PCS.avif",
+                    badges: {
+                        discount: "Diskon Rp2RB",
+                        gift: "Hadiah Gratis"
+                    },
+                    stock: 21,
+                    description: "Set kit alat perbaikan otomotif lengkap dengan 94 pcs perlengkapan dalam satu koper"
+                },
+                {
+                    id: 4,
+                    name: "REAIM Set Alat 1/2 1/4 Inci 187 PCS alat kunci sok",
+                    brand: "REAIM",
+                    price: 899000,
+                    originalPrice: 2366000,
+                    discount: "62%",
+                    rating: 4.7,
+                    location: "Jakarta Utara",
+                    image: "REAIM Set Alat Inci 187 PCS alat kunci sok.jpg",
+                    badges: {
+                        discount: "Diskon 1%",
+                        promo: "Pilih 2, diskon 1%"
+                    },
+                    stock: 7,
+                    description: "Set lengkap 187 PCS alat kunci sok dengan jaminan kualitas original"
+                },
+                {
+                    id: 5,
+                    name: "Kunci Shock Set Kunci Mata Sok 216 PCS",
+                    brand: "REAIM",
+                    price: 349000,
+                    originalPrice: 684000,
+                    discount: "49%",
+                    rating: 4.7,
+                    location: "Jakarta Utara",
+                    image: "Kunci Shock Set Kunci Mata Sok 216 PCS.jpg",
+                    badges: {
+                        discount: "Diskon Rp6RB",
+                        promo: "Pilih 2, diskon 1%"
+                    },
+                    stock: 12,
+                    description: "Tool Kit Set 216 pcs dengan garansi 3 tahun untuk berbagai kebutuhan perbaikan"
+                },
+                {
+                    id: 6,
+                    name: "Set Obeng Presisi 16 in 1 untuk Elektronik",
+                    brand: "ProTools",
+                    price: 75000,
+                    originalPrice: 120000,
+                    discount: "38%",
+                    rating: 4.8,
+                    location: "Jakarta Barat",
+                    image: "Set Obeng Presisi 16 in 1 untuk Elektronik.avif",
+                    badges: {
+                        discount: "Diskon Rp5RB",
+                        gift: "Hadiah Gratis"
+                    },
+                    stock: 30,
+                    description: "Set obeng presisi 16 in 1 cocok untuk perbaikan elektronik, smartphone, dan komputer"
+                },
+                {
+                    id: 7,
+                    name: "Mesin Gerinda Tangan 4 Inch 750W",
+                    brand: "PowerMax",
+                    price: 275000,
+                    originalPrice: 450000,
+                    discount: "39%",
+                    rating: 4.5,
+                    location: "Surabaya",
+                    image: "Mesin Gerinda Tangan 4 Inch 750W.webp",
+                    badges: {
+                        discount: "Diskon Rp10RB",
+                        promo: "Pilih 2, diskon 1%"
+                    },
+                    stock: 15,
+                    description: "Mesin gerinda tangan dengan daya 750W untuk kebutuhan potong dan asah"
+                },
+                {
+                    id: 8,
+                    name: "Set Kunci Pas dan Ring 8-24mm 12 PCS",
+                    brand: "ToolMaster",
+                    price: 129000,
+                    originalPrice: 225000,
+                    discount: "43%",
+                    rating: 4.6,
+                    location: "Bandung",
+                    image: "Set Kunci Pas dan Ring 8-24mm 12 PCS.jpg",
+                    badges: {
+                        discount: "Diskon Rp8RB",
+                        gift: "Bonus Tas"
+                    },
+                    stock: 25,
+                    description: "Set kunci pas dan ring ukuran 8-24mm dengan material baja chrome vanadium"
+                }
+            ];
+
+            // Keranjang belanja
+            let cart = [];
+            
+            // Render produk ke halaman
+            function renderProducts(productsToRender) {
+                productsGrid.innerHTML = '';
+                
+                productsToRender.forEach(product => {
+                    const productElement = document.createElement('div');
+                    productElement.className = 'product-card';
+                    productElement.innerHTML = `
+                        <div class="product-image">
+                            <img src="${product.image}" alt="${product.name}">
+                            <div class="discount-badge">-${product.discount}</div>
+                        </div>
+                        <div class="product-info">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <div class="star-badge"><i class="fas fa-star"></i> ${product.rating}</div>
+                                <strong>${product.brand}</strong>
+                            </div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-price">
+                                Rp${product.price.toLocaleString('id-ID')}
+                                <span class="original-price">Rp${product.originalPrice.toLocaleString('id-ID')}</span>
+                            </div>
+                            <div class="product-stock">Stok: ${product.stock}</div>
+                            <div class="product-badges">
+                                ${product.badges.discount ? `<div class="product-badge badge-discount">${product.badges.discount}</div>` : ''}
+                                ${product.badges.gift ? `<div class="product-badge badge-gift">${product.badges.gift}</div>` : ''}
+                                ${product.badges.promo ? `<div class="product-badge badge-promo">${product.badges.promo}</div>` : ''}
+                            </div>
+                            <div class="product-location">
+                                <i class="fas fa-map-marker-alt"></i> ${product.location}
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-add-cart" data-id="${product.id}">
+                                    <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    productsGrid.appendChild(productElement);
+                });
+                
+                // Tambahkan event listener untuk tombol "Tambah ke Keranjang"
+                document.querySelectorAll('.btn-add-cart').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.getAttribute('data-id'));
+                        addToCart(productId);
+                    });
+                });
+            }
+            
+            // Fungsi untuk mengurutkan produk
+            function sortProductList(sortBy) {
+                let sortedProducts = [...products];
+                
+                switch(sortBy) {
+                    case 'price-low':
+                        sortedProducts.sort((a, b) => a.price - b.price);
+                        break;
+                    case 'price-high':
+                        sortedProducts.sort((a, b) => b.price - a.price);
+                        break;
+                    case 'rating':
+                        sortedProducts.sort((a, b) => b.rating - a.rating);
+                        break;
+                    default:
+                        // Default sorting (no change)
+                        break;
+                }
+                
+                renderProducts(sortedProducts);
+            }
+            
+            // Event listener untuk pengurutan produk
+            sortProducts.addEventListener('change', function() {
+                sortProductList(this.value);
+            });
+            
+            // Fungsi untuk menambah produk ke keranjang
+            function addToCart(productId) {
+                const product = products.find(p => p.id === productId);
+                
+                if (!product) return;
+                
+                // Cek apakah produk sudah ada di keranjang
+                const existingItem = cart.find(item => item.product.id === productId);
+                
+                if (existingItem) {
+                    // Jika sudah ada, tambahkan jumlahnya
+                    existingItem.quantity += 1;
+                } else {
+                    // Jika belum ada, tambahkan produk baru ke keranjang
+                    cart.push({
+                        product: product,
+                        quantity: 1
+                    });
+                }
+                
+                // Update tampilan keranjang
+                updateCart();
+                
+                // Tampilkan notifikasi
+                showNotification(`${product.name} telah ditambahkan ke keranjang!`);
+            }
+            
+            // Fungsi untuk update tampilan keranjang
+            function updateCart() {
+                // Update jumlah item di ikon keranjang
+                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                cartCount.textContent = totalItems;
+                
+                // Update isi keranjang modal
+                renderCartItems();
+                
+                // Simpan ke localStorage untuk persistensi
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+            
+            // Fungsi untuk menampilkan notifikasi
+            function showNotification(message) {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <i class="fas fa-check-circle"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Tambahkan style untuk notifikasi jika belum ada
+                if (!document.querySelector('style#notification-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'notification-style';
+                    style.textContent = `
+                        .notification {
+                            position: fixed;
+                            bottom: 20px;
+                            right: 20px;
+                            z-index: 9999;
+                            animation: slide-in 0.3s ease, fade-out 0.5s ease 2.5s forwards;
+                        }
+                        
+                        .notification-content {
+                            background-color: #4CAF50;
+                            color: white;
+                            padding: 12px 20px;
+                            border-radius: 4px;
+                            display: flex;
+                            align-items: center;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        }
+                        
+                        .notification-content i {
+                            margin-right: 10px;
+                        }
+                        
+                        @keyframes slide-in {
+                            from {
+                                transform: translateX(100%);
+                                opacity: 0;
+                            }
+                            to {
+                                transform: translateX(0);
+                                opacity: 1;
+                            }
+                        }
+                        
+                        @keyframes fade-out {
+                            from {
+                                opacity: 1;
+                            }
+                            to {
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                // Hapus notifikasi setelah 3 detik
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+            
+            // Fungsi untuk menampilkan item keranjang dalam modal
+            function renderCartItems() {
+                // Jika keranjang kosong
+                if (cart.length === 0) {
+                    cartItems.style.display = 'none';
+                    cartSummary.style.display = 'none';
+                    cartEmpty.style.display = 'block';
+                    return;
+                }
+                
+                // Jika keranjang memiliki item
+                cartItems.style.display = 'block';
+                cartSummary.style.display = 'block';
+                cartEmpty.style.display = 'none';
+                
+                // Render item keranjang
+                cartItems.innerHTML = '';
+                
+                let subtotal = 0;
+                let totalDiscount = 0;
+                
+                cart.forEach(item => {
+                    const product = item.product;
+                    const itemTotal = product.price * item.quantity;
+                    const itemDiscount = (product.originalPrice - product.price) * item.quantity;
+                    
+                    subtotal += itemTotal;
+                    totalDiscount += itemDiscount;
+                    
+                    const cartItemElement = document.createElement('div');
+                    cartItemElement.className = 'cart-item';
+                    cartItemElement.innerHTML = `
+                        <div class="cart-item-img">
+                            <img src="${product.image}" alt="${product.name}">
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${product.name}</div>
+                            <div class="cart-item-price">
+                                Rp${product.price.toLocaleString('id-ID')}
+                                <span class="cart-item-original">Rp${product.originalPrice.toLocaleString('id-ID')}</span>
+                                <span class="cart-item-discount">-${product.discount}</span>
+                            </div>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn decrease-btn" data-id="${product.id}">-</button>
+                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="${product.stock}" data-id="${product.id}">
+                            <button class="quantity-btn increase-btn" data-id="${product.id}">+</button>
+                        </div>
+                        <div class="cart-item-remove" data-id="${product.id}">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    `;
+                    
+                    cartItems.appendChild(cartItemElement);
+                });
+                
+                // Update ringkasan keranjang
+                cartSubtotal.textContent = `Rp${subtotal.toLocaleString('id-ID')}`;
+                cartDiscount.textContent = `-Rp${totalDiscount.toLocaleString('id-ID')}`;
+                cartTotal.textContent = `Rp${subtotal.toLocaleString('id-ID')}`;
+                
+                // Event listener untuk ubah kuantitas dan hapus item
+                document.querySelectorAll('.decrease-btn').forEach(button => { 
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.getAttribute('data-id'));
+                        decreaseQuantity(productId);
+                    });
+                });
+                
+                document.querySelectorAll('.increase-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.getAttribute('data-id'));
+                        increaseQuantity(productId);
+                    });
+                });
+                
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const productId = parseInt(this.getAttribute('data-id'));
+                        const newQuantity = parseInt(this.value);
+                        updateItemQuantity(productId, newQuantity);
+                    });
+                });
+                
+                document.querySelectorAll('.cart-item-remove').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.getAttribute('data-id'));
+                        removeFromCart(productId);
+                    });
+                });
+            }
+            
+            // Fungsi untuk mengurangi kuantitas item
+            function decreaseQuantity(productId) {
+                const itemIndex = cart.findIndex(item => item.product.id === productId);
+                
+                if (itemIndex === -1) return;
+                
+                if (cart[itemIndex].quantity > 1) {
+                    cart[itemIndex].quantity -= 1;
+                } else {
+                    // Jika kuantitas menjadi 0, hapus item dari keranjang
+                    cart.splice(itemIndex, 1);
+                }
+                
+                updateCart();
+            }
+            
+            // Fungsi untuk menambah kuantitas item
+            function increaseQuantity(productId) {
+                const itemIndex = cart.findIndex(item => item.product.id === productId);
+                
+                if (itemIndex === -1) return;
+                
+                const product = products.find(p => p.id === productId);
+                
+                // Pastikan kuantitas tidak melebihi stok yang tersedia
+                if (cart[itemIndex].quantity < product.stock) {
+                    cart[itemIndex].quantity += 1;
+                    updateCart();
+                } else {
+                    showNotification(`Maaf, stok ${product.name} hanya tersisa ${product.stock} item.`);
+                }
+            }
+            
+            // Fungsi untuk update kuantitas item secara langsung
+            function updateItemQuantity(productId, newQuantity) {
+                const itemIndex = cart.findIndex(item => item.product.id === productId);
+                
+                if (itemIndex === -1) return;
+                
+                const product = products.find(p => p.id === productId);
+                
+                // Validasi kuantitas
+                if (newQuantity < 1) {
+                    newQuantity = 1;
+                } else if (newQuantity > product.stock) {
+                    newQuantity = product.stock;
+                    showNotification(`Maaf, stok ${product.name} hanya tersisa ${product.stock} item.`);
+                }
+                
+                cart[itemIndex].quantity = newQuantity;
+                updateCart();
+            }
+            
+            // Fungsi untuk menghapus item dari keranjang
+            function removeFromCart(productId) {
+                const itemIndex = cart.findIndex(item => item.product.id === productId);
+                
+                if (itemIndex === -1) return;
+                
+                const product = cart[itemIndex].product;
+                
+                // Hapus item dari keranjang
+                cart.splice(itemIndex, 1);
+                
+                // Update tampilan keranjang
+                updateCart();
+                
+                // Tampilkan notifikasi
+                showNotification(`${product.name} telah dihapus dari keranjang.`);
+            }
+            
+            // Event untuk membuka modal login
+            openLoginModalBtn.addEventListener('click', function() {
+                loginModal.style.display = 'flex';
+            });
+
+            // Event untuk menutup modal login
+            closeLoginModalBtn.addEventListener('click', function() {
+                loginModal.style.display = 'none';
+            });
+            
+            // Event untuk membuka modal keranjang
+            openCartModalBtn.addEventListener('click', function() {
+                renderCartItems();
+                cartModal.style.display = 'flex';
+            });
+            
+            // Event untuk menutup modal keranjang
+            closeCartModalBtn.addEventListener('click', function() {
+                cartModal.style.display = 'none';
+            });
+
+            // Menutup modal saat klik di luar modal
+            window.addEventListener('click', function(event) {
+                if (event.target === loginModal) {
+                    loginModal.style.display = 'none';
+                }
+                if (event.target === cartModal) {
+                    cartModal.style.display = 'none';
+                }
+            });
+            
+            // Event untuk tombol "Belanja Sekarang" di keranjang kosong
+            shopNowBtn.addEventListener('click', function() {
+                cartModal.style.display = 'none';
+            });
+
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Hapus kelas active dari semua tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Tambahkan kelas active ke tab yang diklik
+                    this.classList.add('active');
+                    
+                    // Dapatkan ID tab yang akan ditampilkan
+                    const tabId = this.getAttribute('data-tab') + 'Tab';
+                    
+                    // Sembunyikan semua tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Tampilkan tab content yang sesuai
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Login form submission
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                try {
+                    // Panggil API login
+                    const userData = await loginUser({ email, password });
+                    
+                    // Tampilkan pesan sukses
+                    showNotification('Login berhasil!');
+                    
+                    // Sembunyikan modal login
+                    loginModal.style.display = 'none';
+                    
+                    // Tampilkan dashboard
+                    updateUIAfterLogin();
+                } catch (error) {
+                    // Login gagal
+                    alert(`Login gagal: ${error.message}`);
+    }
+});
+
+            // Register form submission
+            registerForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    // Validasi password
+    if (password !== confirmPassword) {
+        alert('Password dan konfirmasi password tidak cocok!');
+        return;
+    }
+    
+    try {
+        // Panggil API register
+        await registerUser({ name, email, password });
+        
+        showNotification('Registrasi berhasil! Silakan login dengan akun baru Anda.');
+        
+        // Reset form
+        registerForm.reset();
+        
+        // Alihkan ke tab login
+        tabs[0].click();
+    } catch (error) {
+        alert(`Registrasi gagal: ${error.message}`);
+    }
+});
+
+            // Fungsi untuk update UI setelah login
+            function updateUIAfterLogin() {
+                // Tampilkan nama pengguna
+                const userName = localStorage.getItem('userName') || 'Pengguna';
+                userNameDisplay.textContent = userName;
+                dashboardName.value = userName;
+                dashboardEmail.value = localStorage.getItem('loginEmail') || 'user@example.com';
+                
+                // Update ikon user
+                openLoginModalBtn.innerHTML = '<i class="fas fa-user-check"></i>';
+                openLoginModalBtn.title = 'Lihat Profil';
+                
+                // Ubah event listener untuk ikon user
+                openLoginModalBtn.removeEventListener('click', function() {
+                    loginModal.style.display = 'flex';
+                });
+                
+                openLoginModalBtn.addEventListener('click', function() {
+                    // Toggle dashboard visibility
+                    if (dashboard.style.display === 'none') {
+                        mainContent.style.display = 'none';
+                        dashboard.style.display = 'block';
+                    } else {
+                        mainContent.style.display = 'block';
+                        dashboard.style.display = 'none';
+                    }
+                });
+                
+                // Tambahkan tombol logout ke header
+                const logoutBtn = document.createElement('div');
+                logoutBtn.className = 'user-icon';
+                logoutBtn.style.marginLeft = '15px';
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+                logoutBtn.title = 'Logout';
+                logoutBtn.addEventListener('click', function() {
+                    logout();
+                });
+                
+                // Tambahkan tombol logout setelah ikon user
+                if (!document.querySelector('.header-actions .fa-sign-out-alt')) {
+                    openLoginModalBtn.parentNode.insertBefore(logoutBtn, openLoginModalBtn.nextSibling);
+                }
+            }
+
+            // Fungsi logout
+            function logout() {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                
+                // Refresh halaman untuk reset UI
+                location.reload();
+            }
+
+            // Tambahkan event listener untuk tombol checkout
+            document.getElementById('checkoutBtn').addEventListener('click', function() {
+                if (cart.length === 0) {
+                    showNotification('Keranjang belanja Anda kosong!');
+                    return;
+                }
+                
+                // Periksa apakah pengguna sudah login
+                if (localStorage.getItem('isLoggedIn') !== 'true') {
+                    // Tampilkan pesan bahwa pengguna harus login
+                    showNotification('Silakan login terlebih dahulu untuk melanjutkan pembayaran.');
+                    
+                    // Sembunyikan modal keranjang
+                    cartModal.style.display = 'none';
+                    
+                    // Tampilkan modal login
+                    setTimeout(() => {
+                        loginModal.style.display = 'flex';
+                    }, 1000);
+                    
+                    return;
+                }
+                
+                // Proses checkout (dalam aplikasi nyata akan diarahkan ke halaman pembayaran)
+                const totalBelanja = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+                
+                // Untuk demo, kita akan menampilkan alert berhasil checkout
+                alert(`Checkout berhasil!\n\nTotal Belanja: Rp${totalBelanja.toLocaleString('id-ID')}\n\nTerima kasih telah berbelanja di GO TOOLS!`);
+                
+                // Kosongkan keranjang
+                cart = [];
+                updateCart();
+                
+                // Sembunyikan modal keranjang
+                cartModal.style.display = 'none';
+                
+                // Tampilkan notifikasi
+                showNotification('Pesanan Anda sedang diproses!');
+            });
+            
+            // Cek apakah pengguna sudah login sebelumnya
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                updateUIAfterLogin();
+            }
+            
+            // Load keranjang dari localStorage jika ada
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                try {
+                    cart = JSON.parse(savedCart);
+                    updateCart();
+                } catch (e) {
+                    console.error('Error loading cart from localStorage:', e);
+                    cart = [];
+                }
+            }
+            
+            // Inisialisasi - render produk
+            renderProducts(products);
+        });
+    </script>
+</body>
+</html>
